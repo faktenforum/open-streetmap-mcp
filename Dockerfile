@@ -2,12 +2,20 @@ FROM python:3.13-slim
 
 WORKDIR /app
 
+# Copy project files
 COPY pyproject.toml uv.lock README.md ./
 COPY src/ ./src/
 
-RUN pip install uv && uv sync --frozen
+# Install dependencies
+RUN pip install --no-cache-dir uv && \
+    uv sync --frozen
 
+# Copy and set up entrypoint script
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# Expose port (default 8000, configurable via PORT environment variable)
 EXPOSE 8000
 
-ENTRYPOINT ["uv", "run", "src/osm_mcp_server/server.py"]
-CMD ["--transport", "http"]
+# Use entrypoint script to read PORT from environment variable
+ENTRYPOINT ["/app/entrypoint.sh"]
