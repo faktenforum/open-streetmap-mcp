@@ -25,7 +25,7 @@ Thumbs.db
 .gitignore
 
 # Documentation and examples (not needed in container)
-README.md
+# Note: README.md is required by pyproject.toml
 examples/
 demo/
 .github/
